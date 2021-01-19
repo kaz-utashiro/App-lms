@@ -42,6 +42,11 @@
       },
       "runtime" : {
          "requires" : {
+            "Encode" : "0",
+            "Getopt::EX::Long" : "0",
+            "List::Util" : "0",
+            "Moo" : "0",
+            "Pod::Usage" : "0",
             "perl" : "v5.14.0"
          }
       },

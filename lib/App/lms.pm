@@ -12,23 +12,19 @@ use open IO => 'utf8', ':std';
 use Pod::Usage;
 use List::Util qw(any);
 
-sub new {
-    my $class = shift;
-    bless {
-	list    => undef,
-	pager   => undef,
-	skip    => [
-	    $ENV{OPTEX_BINDIR} || ".optex.d/bin",
-	    ],
-	verbose => 1,
-    }, $class;
-}
+use Moo;
+
+has list    => ( is => 'ro' );
+has pager   => ( is => 'ro' );
+has verbose => ( is => 'ro', default => 1 );
+has skip    => ( is => 'ro',
+		 default => sub { [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ] } );
+
+no Moo;
 
 sub run {
     my $obj = shift;
-    for (@_) {
-	$_ = decode('utf8', $_) unless utf8::is_utf8($_);
-    }
+    @_ = map { utf8::is_utf8($_) ? $_ : decode('utf8', $_) } @_;
 
     use Getopt::EX::Long qw(GetOptionsFromArray Configure ExConfigure);
     ExConfigure BASECLASS => [ __PACKAGE__, "Getopt::EX" ];
@@ -51,7 +47,7 @@ sub run {
     }
 
     my $skip = do {
-	my @re = map { qr/\Q$_\E$/ } @{$obj->{skip}};
+	my @re = map { qr/\Q$_\E$/ } @{$obj->skip};
 	sub { any { $_[0] =~ $_ } @re };
     };
     my @path = grep !$skip->($_), split /:/, $ENV{'PATH'};
@@ -65,7 +61,7 @@ sub run {
 	my $p = "$path/$name";
 	next unless -r $p;
 	$count++;
-	if (&binary($p) && !$obj->{list}) {
+	if (&binary($p) && !$obj->list) {
 	    system 'file', $p;
 	    next;
 	}
@@ -76,15 +72,15 @@ sub run {
 
     @found or return;
 
-    if ($obj->{list}) {
-	if ($obj->{verbose}) {
+    if ($obj->list) {
+	if ($obj->verbose) {
 	    system 'ls', '-l', @found;
 	} else {
 	    print "@found\n";
 	}
 	exit 0;
     }
-    my $pager = $obj->{pager} || $ENV{'PAGER'} || 'more';
+    my $pager = $obj->pager || $ENV{'PAGER'} || 'more';
     exec "$pager @found";
     die "$pager: $!\n";
 }
