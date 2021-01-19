@@ -1,4 +1,5 @@
 name = "App-lms"
+readme_from = "script/lms"
 badges = ["travis-ci.com"]
 authority="cpan:UTASHIRO"
 

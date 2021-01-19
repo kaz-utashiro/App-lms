@@ -1,33 +1,43 @@
-[![Build Status](https://travis-ci.com/kaz-utashiro/App-lms.svg?branch=master)](https://travis-ci.com/kaz-utashiro/App-lms)
-# NAME
+#!/usr/bin/env perl
+our $VERSION = "0.01";
+use strict;
+use warnings;
+use App::lms;
+App::lms->new->run(@ARGV);
+
+=encoding utf-8
+
+=head1 NAME
 
 lms - Let Me See command
 
-# VERSION
+=head1 VERSION
 
 Version 0.01
 
-# SYNOPSIS
+=head1 SYNOPSIS
 
 lms command/library
 
-# DESCRIPTION
+=head1 DESCRIPTION
 
 This is a small program to look a command or library file.
 
 Only Perl is supported now.
 
-# SEE ALSO
+=head1 SEE ALSO
 
-[App::optex](https://metacpan.org/pod/App::optex), [https://github.com/kaz-utashiro/optex](https://github.com/kaz-utashiro/optex)
+L<App::optex>, L<https://github.com/kaz-utashiro/optex>
 
-# AUTHOR
+=head1 AUTHOR
 
 Kazumasa Utashiro
 
-# LICENSE
+=head1 LICENSE
 
 Copyright 1992-2021 Kazumasa Utashiro.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+=cut
