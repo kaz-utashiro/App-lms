@@ -10,12 +10,13 @@ use Encode;
 use Data::Dumper;
 use open IO => 'utf8', ':std';
 use Pod::Usage;
-use List::Util qw(any);
+use List::Util qw(any first);
 
 use Moo;
 
 has list    => ( is => 'ro' );
 has pager   => ( is => 'ro' );
+has suffix  => ( is => 'ro', default => sub { [ qw( .pm ) ] } );
 has verbose => ( is => 'ro', default => 1 );
 has skip    => ( is => 'ro',
 		 default => sub { [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ] } );
@@ -58,14 +59,16 @@ sub run {
     my $count = 0;
 
     for my $path (@path) {
-	my $p = "$path/$name";
-	next unless -r $p;
+	my $file = do {
+	    first { -f $_ && -r $_ }
+	    map { "$path/$name" . $_ } '', @{$obj->suffix};
+	} or next;
 	$count++;
-	if (&binary($p) && !$obj->list) {
-	    system 'file', $p;
+	if (&binary($file) and not $obj->list) {
+	    system 'file', $file;
 	    next;
 	}
-	push @found, $p;
+	push @found, $file;
     }
 
     die "nothing hit in path\n" if $count == 0;
