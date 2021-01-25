@@ -1,6 +1,6 @@
 package App::lms;
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 use v5.14;
 use warnings;
@@ -11,44 +11,40 @@ use Data::Dumper;
 use open IO => 'utf8', ':std';
 use Pod::Usage;
 use List::Util qw(any first);
+use App::lms::Util;
 
 use Moo;
 
+has debug   => ( is => 'ro' );
 has list    => ( is => 'ro' );
+has verbose => ( is => 'ro', default => 1 );
 has pager   => ( is => 'ro' );
 has suffix  => ( is => 'ro', default => sub { [ qw( .pm ) ] } );
-has verbose => ( is => 'ro', default => 1 );
 has skip    => ( is => 'ro',
 		 default => sub { [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ] } );
 
 no Moo;
 
 sub run {
-    my $obj = shift;
+    my $app = shift;
     @_ = map { utf8::is_utf8($_) ? $_ : decode('utf8', $_) } @_;
 
     use Getopt::EX::Long qw(GetOptionsFromArray Configure ExConfigure);
     ExConfigure BASECLASS => [ __PACKAGE__, "Getopt::EX" ];
     Configure "bundling";
-    GetOptionsFromArray(
-	\@_,
-	$obj,
-	map { s/^(?=\w+_)(\w+)\K/"|".$1=~tr[_][-]r."|".$1=~tr[_][]dr/er }
-	"list|l",
-	"verbose|v!",
-	"pager|p=s",
-	"skip=s",
-	) || pod2usage();
+    GetOptionsFromArray(\@_, $app, make_options "
+	debug
+	list    | l
+	verbose | v !
+	pager   | p =s
+	suffix      =s
+	skip        =s
+	") || pod2usage();
 
-    my $name = shift || pod2usage();
-
-    # perl module
-    if ($name =~ s[::][/]g) {
-	$name .= ".pm";
-    }
+    my $name = shift // pod2usage();
 
     my $skip = do {
-	my @re = map { qr/\Q$_\E$/ } @{$obj->skip};
+	my @re = map { qr/\Q$_\E$/ } @{$app->skip};
 	sub { any { $_[0] =~ $_ } @re };
     };
     my @path = grep !$skip->($_), split /:/, $ENV{'PATH'};
@@ -60,11 +56,16 @@ sub run {
 
     for my $path (@path) {
 	my $file = do {
-	    first { -f $_ && -r $_ }
-	    map { "$path/$name" . $_ } '', @{$obj->suffix};
+	    first {
+		warn "test $_\n" if $app->debug;
+		-f $_ && -r $_;
+	    }
+	    map { ( $_, s[::][/]g ? $_ : () ) }
+	    map { "$path/$name" . $_ }
+	    '', @{$app->suffix};
 	} or next;
 	$count++;
-	if (&binary($file) and not $obj->list) {
+	if (&is_binary($file) and not $app->list) {
 	    system 'file', $file;
 	    next;
 	}
@@ -73,31 +74,20 @@ sub run {
 
     die "nothing hit in path\n" if $count == 0;
 
-    @found or return;
+    return if not @found;
 
-    if ($obj->list) {
-	if ($obj->verbose) {
+    if ($app->list) {
+	if ($app->verbose) {
 	    system 'ls', '-l', @found;
 	} else {
 	    print "@found\n";
 	}
 	exit 0;
     }
-    my $pager = $obj->pager || $ENV{'PAGER'} || 'more';
+    my $pager = $app->pager || $ENV{'PAGER'} || 'less';
     exec "$pager @found";
     die "$pager: $!\n";
 }
-
-######################################################################
-
-sub binary {
-    my $file = shift // die;
-    open my $fh, '<', $file or die "$file: $!\n";
-    binmode $fh, ':raw';
-    $fh->read(local $_, 512);
-    /[\0\377]/ || (tr/\000-\007\013\016-\032\034-\037/./ * 10 > length);
-}
-
 
 1;
 

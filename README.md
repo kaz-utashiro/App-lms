@@ -5,7 +5,7 @@ lms - Let Me See command
 
 # VERSION
 
-Version 0.01
+Version 0.02
 
 # SYNOPSIS
 
@@ -16,6 +16,10 @@ lms command/library
 This is a small program to look a command or library file.
 
 Only Perl is supported now.
+
+# INSTALL
+
+cpanm https://github.com/kaz-utashiro/App-lms.git
 
 # SEE ALSO
 

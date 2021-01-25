@@ -2,6 +2,11 @@ Revision history for "lms" command
 
 {{$NEXT}}
 
+0.02 2021-01-25T13:01:17Z
+
+    - Add debug option.
+    - Move some part to Util.pm.
+
 0.01 2021-01-20T02:29:05Z
 
     - original version
