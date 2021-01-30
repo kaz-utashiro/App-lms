@@ -1,6 +1,6 @@
 package App::lms;
 
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 
 use v5.14;
 use warnings;
@@ -31,7 +31,7 @@ sub run {
 
     use Getopt::EX::Long qw(GetOptionsFromArray Configure ExConfigure);
     ExConfigure BASECLASS => [ __PACKAGE__, "Getopt::EX" ];
-    Configure "bundling";
+    Configure qw(bundling no_getopt_compat);
     GetOptionsFromArray(\@_, $app, make_options "
 	debug
 	list    | l
@@ -41,7 +41,8 @@ sub run {
 	skip        =s
 	") || pod2usage();
 
-    my $name = shift // pod2usage();
+    my $name = pop // pod2usage();
+    my @option = @_;
 
     my $skip = do {
 	my @re = map { qr/\Q$_\E$/ } @{$app->skip};
@@ -85,7 +86,7 @@ sub run {
 	exit 0;
     }
     my $pager = $app->pager || $ENV{'PAGER'} || 'less';
-    exec "$pager @found";
+    exec $pager, @option, @found;
     die "$pager: $!\n";
 }
 
