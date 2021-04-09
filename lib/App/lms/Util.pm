@@ -5,8 +5,8 @@ use warnings;
 sub make_options {
     map {
 	# "foo_bar" -> "foo_bar|foo-bar|foobar"
-	s{^(?=\w+_)(\w+)\K}{
-	    "|" . $1 =~ tr[_][-]r . "|" . $1 =~ tr[_][]dr
+	s{^(?=\w+_)(?<opt>\w+)\K}{
+	    "|" . $+{opt} =~ tr[_][-]r . "|" . $+{opt} =~ tr[_][]dr
 	}er;
     }
     grep {

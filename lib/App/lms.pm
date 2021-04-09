@@ -38,11 +38,12 @@ sub run {
 	verbose | v !
 	pager   | p =s
 	suffix      =s
-	skip        =s
+	skip        =s@
 	") || pod2usage();
 
     my $name = pop // pod2usage();
-    my @option = @_;
+    my @option = splice @_;
+    my $pager = $app->pager || $ENV{'PAGER'} || 'less';
 
     my $skip = do {
 	my @re = map { qr/\Q$_\E$/ } @{$app->skip};
@@ -85,7 +86,6 @@ sub run {
 	}
 	exit 0;
     }
-    my $pager = $app->pager || $ENV{'PAGER'} || 'less';
     exec $pager, @option, @found;
     die "$pager: $!\n";
 }
