@@ -3,7 +3,8 @@ our $VERSION = "0.04";
 use strict;
 use warnings;
 use App::lms;
-App::lms->new->run(@ARGV);
+
+exit App::lms->new->run(@ARGV);
 
 =encoding utf-8
 

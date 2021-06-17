@@ -25,6 +25,9 @@ has skip    => ( is => 'ro',
 
 no Moo;
 
+use App::lms::Command;
+use App::lms::Perl;
+
 sub run {
     my $app = shift;
     @_ = map { utf8::is_utf8($_) ? $_ : decode('utf8', $_) } @_;
@@ -45,38 +48,19 @@ sub run {
     my @option = splice @_;
     my $pager = $app->pager || $ENV{'PAGER'} || 'less';
 
-    my $skip = do {
-	my @re = map { qr/\Q$_\E$/ } @{$app->skip};
-	sub { any { $_[0] =~ $_ } @re };
-    };
-    my @path = grep !$skip->($_), split /:/, $ENV{'PATH'};
-    my %path = map { $_ => 1 } @path;
-    push @path, grep !$path{$_}, @INC;
-
-    my @found;
-    my $count = 0;
-
-    for my $path (@path) {
-	my $file = do {
-	    first {
-		warn "test $_\n" if $app->debug;
-		-f $_ && -r $_;
-	    }
-	    map { ( $_, s[::][/]g ? $_ : () ) }
-	    map { "$path/$name" . $_ }
-	    '', @{$app->suffix};
-	} or next;
-	$count++;
-	if (&is_binary($file) and not $app->list) {
-	    system 'file', $file;
-	    next;
+    my @found = do {
+	no strict 'refs';
+	map {
+	    &{"$_\::get_path"}($app, $name);
 	}
-	push @found, $file;
+	map { __PACKAGE__ . '::' . $_ }
+	qw( Command Perl );
+    };
+
+    if (not @found) {
+	warn "$name: Nothing found.\n";
+	return 1;
     }
-
-    die "nothing hit in path\n" if $count == 0;
-
-    return if not @found;
 
     if ($app->list) {
 	if ($app->verbose) {
@@ -84,10 +68,29 @@ sub run {
 	} else {
 	    print "@found\n";
 	}
-	exit 0;
+	return 0;
     }
+
+    @found = grep {
+	not &is_binary($_) or do {
+	    system 'file', $_;
+	    0;
+	}
+    } @found or return 0;
+
     exec $pager, @option, @found;
     die "$pager: $!\n";
+}
+
+use List::Util qw(none);
+
+sub valid {
+    my $app = shift;
+    state $sub = do {
+	my @re = map { qr/\Q$_\E$/ } @{$app->skip};
+	sub { none { $_[0] =~ $_ } @re };
+    };
+    $sub->(@_);
 }
 
 1;
