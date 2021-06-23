@@ -25,9 +25,6 @@ has skip    => ( is => 'ro',
 
 no Moo;
 
-use App::lms::Command;
-use App::lms::Perl;
-
 sub run {
     my $app = shift;
     @_ = map { utf8::is_utf8($_) ? $_ : decode('utf8', $_) } @_;
@@ -50,11 +47,12 @@ sub run {
 
     my @found = do {
 	no strict 'refs';
+	grep { defined }
 	map {
-	    &{"$_\::get_path"}($app, $name);
+	    eval "require $_" ? &{"$_\::get_path"}($app, $name) : ();
 	}
 	map { __PACKAGE__ . '::' . $_ }
-	qw( Command Perl );
+	qw( Command Perl Python );
     };
 
     if (not @found) {
