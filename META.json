@@ -46,7 +46,7 @@
             "Getopt::EX::Long" : "0",
             "Inline" : "0",
             "List::Util" : "0",
-            "Moo" : "0",
+            "Mo" : "0",
             "Pod::Usage" : "0",
             "perl" : "v5.14.0"
          }

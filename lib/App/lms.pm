@@ -13,17 +13,16 @@ use Pod::Usage;
 use List::Util qw(any first);
 use App::lms::Util;
 
-use Moo;
+use Mo qw(default);
 
-has debug   => ( is => 'ro' );
-has list    => ( is => 'ro' );
-has verbose => ( is => 'ro', default => 1 );
-has pager   => ( is => 'ro' );
-has suffix  => ( is => 'ro', default => sub { [ qw( .pm ) ] } );
-has skip    => ( is => 'ro',
-		 default => sub { [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ] } );
+has debug   => ;
+has list    => default => 0;
+has verbose => default => 1;
+has pager   => ;
+has suffix  => default => [ qw( .pm ) ];
+has skip    => default => [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ];
 
-no Moo;
+no Mo;
 
 sub run {
     my $app = shift;
