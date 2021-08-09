@@ -2,6 +2,10 @@ Revision history for "lms" command
 
 {{$NEXT}}
 
+0.05 2021-08-09T03:18:38Z
+
+    - Use Getopt::EX::Hashed oo interface.
+
 0.04 2021-04-09T01:31:32Z
 
     - Look at $ENV{PAGER}.

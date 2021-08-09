@@ -1,6 +1,6 @@
 package App::lms;
 
-our $VERSION = "0.04";
+our $VERSION = "0.05";
 
 use v5.14;
 use warnings;
@@ -13,16 +13,17 @@ use Pod::Usage;
 use List::Util qw(any first);
 use App::lms::Util;
 
-use Mo qw(default);
+use Getopt::EX::Hashed;
 
-has debug   => ;
-has list    => default => 0;
-has verbose => default => 1;
-has pager   => ;
-has suffix  => default => [ qw( .pm ) ];
-has skip    => default => [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ];
+has debug   => spec => '       ' , is => 'ro' ;
+has list    => spec => ' l     ' , is => 'ro' ;
+has verbose => spec => ' v !   ' , is => 'ro' , default => 1 ;
+has pager   => spec => ' p =s  ' , is => 'ro' ;
+has suffix  => spec => '   =s  ' , is => 'ro' , default => [ qw( .pm ) ] ;
+has skip    => spec => '   =s@ ' , is => 'ro' ,
+    default => [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ] ;
 
-no Mo;
+no Getopt::EX::Hashed;
 
 sub run {
     my $app = shift;
@@ -31,14 +32,7 @@ sub run {
     use Getopt::EX::Long qw(GetOptionsFromArray Configure ExConfigure);
     ExConfigure BASECLASS => [ __PACKAGE__, "Getopt::EX" ];
     Configure qw(bundling no_getopt_compat);
-    GetOptionsFromArray(\@_, $app, make_options "
-	debug
-	list    | l
-	verbose | v !
-	pager   | p =s
-	suffix      =s
-	skip        =s@
-	") || pod2usage();
+    GetOptionsFromArray(\@_, $app->optspec) || pod2usage();
 
     my $name = pop // pod2usage();
     my @option = splice @_;
