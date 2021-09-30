@@ -43,7 +43,7 @@
       "runtime" : {
          "requires" : {
             "Encode" : "0",
-            "Getopt::EX::Hashed" : "0.9908",
+            "Getopt::EX::Hashed" : "0.9920",
             "Getopt::EX::Long" : "0",
             "Inline" : "0",
             "List::Util" : "0",

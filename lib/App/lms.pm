@@ -13,17 +13,15 @@ use Pod::Usage;
 use List::Util qw(any first);
 use App::lms::Util;
 
-use Getopt::EX::Hashed;
-
-has debug   => spec => '       ' , is => 'ro' ;
-has list    => spec => ' l     ' , is => 'ro' ;
-has verbose => spec => ' v !   ' , is => 'ro' , default => 1 ;
-has pager   => spec => ' p =s  ' , is => 'ro' ;
-has suffix  => spec => '   =s  ' , is => 'ro' , default => [ qw( .pm ) ] ;
-has skip    => spec => '   =s@ ' , is => 'ro' ,
-    default => [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ] ;
-
-no Getopt::EX::Hashed;
+use Getopt::EX::Hashed; {
+    has debug   => '       ' , is => 'ro' ;
+    has list    => ' l     ' , is => 'ro' ;
+    has verbose => ' v !   ' , is => 'ro' , default => 1 ;
+    has pager   => ' p =s  ' , is => 'ro' ;
+    has suffix  => '   =s  ' , is => 'ro' , default => [ qw( .pm ) ] ;
+    has skip    => '   =s@ ' , is => 'ro' ,
+	default => [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ] ;
+} no Getopt::EX::Hashed;
 
 sub run {
     my $app = shift;
