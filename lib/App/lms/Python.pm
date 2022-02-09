@@ -7,7 +7,18 @@ sub get_path {
     getsourcefile($name);
 }
 
-use Inline Python => <<'END';
+my $DIR;
+BEGIN {
+    $DIR = "$ENV{HOME}/.Inline";
+    unless (-d $DIR) {
+	mkdir $DIR || die "$!";
+	warn "Make $DIR directory.\n";
+    }
+}
+
+use Inline
+    DIRECTORY => $DIR,
+    Python => <<'END';
 
 import re
 import inspect

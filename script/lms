@@ -24,15 +24,26 @@ lms command/library
 
 This is a small program to look a command or library file.
 
-Only Perl is supported now.
+It is convenient to see a command file written in shell or any other
+script language.
+
+As for library files, only Perl is supported, and experimental support
+for Python is included.
+
+=head1 FILES
+
+=over 7
+
+=item F<~/.Inline>
+
+Directory used by L<Inline> module.  Automatically created if not
+exists.
+
+=back
 
 =head1 INSTALL
 
 cpanm https://github.com/kaz-utashiro/App-lms.git
-
-=head1 SEE ALSO
-
-L<App::optex>, L<https://github.com/kaz-utashiro/optex>
 
 =head1 AUTHOR
 
