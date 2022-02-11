@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/kaz-utashiro/App-lms/workflows/test/badge.svg)](https://github.com/kaz-utashiro/App-lms/actions)
+
 # NAME
 
 lms - Let Me See command
