@@ -4,25 +4,23 @@
       "Kazumasa Utashiro"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.1.12, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "Dist::Milla version v1.0.20, Dist::Zilla version 6.024, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : 2
+      "version" : "2"
    },
    "name" : "App-lms",
    "no_index" : {
       "directory" : [
-         "t",
-         "xt",
-         "inc",
-         "share",
          "eg",
          "examples",
-         "author",
-         "builder"
+         "inc",
+         "share",
+         "t",
+         "xt"
       ]
    },
    "prereqs" : {
@@ -33,11 +31,9 @@
       },
       "develop" : {
          "requires" : {
-            "Test::CPAN::Meta" : "0",
-            "Test::MinimumVersion::Fast" : "0.04",
-            "Test::PAUSE::Permissions" : "0.07",
-            "Test::Pod" : "1.41",
-            "Test::Spellunker" : "v0.2.7"
+            "Dist::Milla" : "v1.0.20",
+            "Dist::Zilla::Plugin::GitHubREADME::Badge" : "0",
+            "Test::Pod" : "1.41"
          }
       },
       "runtime" : {
@@ -57,7 +53,7 @@
          }
       }
    },
-   "release_status" : "unstable",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/kaz-utashiro/App-lms/issues"
@@ -65,15 +61,17 @@
       "homepage" : "https://github.com/kaz-utashiro/App-lms",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/kaz-utashiro/App-lms.git",
+         "url" : "https://github.com/kaz-utashiro/App-lms.git",
          "web" : "https://github.com/kaz-utashiro/App-lms"
       }
    },
-   "version" : "0.05",
-   "x_authority" : "cpan:UTASHIRO",
+   "version" : "0.06",
    "x_contributors" : [
       "Kazumasa Utashiro <kaz@utashiro.com>"
    ],
-   "x_serialization_backend" : "JSON::PP version 4.04",
+   "x_generated_by_perl" : "v5.30.3",
+   "x_serialization_backend" : "JSON::XS version 4.02",
+   "x_spdx_expression" : "Artistic-1.0-Perl OR GPL-1.0-or-later",
    "x_static_install" : 1
 }
+
