@@ -2,6 +2,10 @@ Revision history for "lms" command
 
 {{$NEXT}}
 
+0.07  2022-02-11 20:01:50 JST
+
+    - Add github action badge.
+
 0.06  2022-02-11 17:51:10 JST
 
     - Make ~/.Inline directory.
