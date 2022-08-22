@@ -1,7 +1,7 @@
 requires 'Encode';
 requires 'Getopt::EX::Long';
 requires 'List::Util';
-requires 'Getopt::EX::Hashed', '0.9920';
+requires 'Getopt::EX::Hashed', '1.04';
 requires 'Pod::Usage';
 requires 'perl', 'v5.14.0';
 requires 'Inline';

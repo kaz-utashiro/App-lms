@@ -14,26 +14,28 @@ use List::Util qw(any first);
 use App::lms::Util;
 
 use Getopt::EX::Hashed; {
-    has debug   => '       ' , is => 'ro' ;
-    has list    => ' l     ' , is => 'ro' ;
-    has verbose => ' v !   ' , is => 'ro' , default => 1 ;
-    has pager   => ' p =s  ' , is => 'ro' ;
-    has suffix  => '   =s  ' , is => 'ro' , default => [ qw( .pm ) ] ;
-    has skip    => '   =s@ ' , is => 'ro' ,
+    Getopt::EX::Hashed->configure(DEFAULT => [ is => 'lv' ]);
+    has debug   => '       ' ;
+    has list    => ' l     ' ;
+    has verbose => ' v !   ' , default => 1 ;
+    has pager   => ' p =s  ' ;
+    has suffix  => '   =s  ' , default => [ qw( .pm ) ] ;
+    has skip    => '   =s@ ' ,
 	default => [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ] ;
 } no Getopt::EX::Hashed;
 
 sub run {
     my $app = shift;
     @_ = map { utf8::is_utf8($_) ? $_ : decode('utf8', $_) } @_;
+    local @ARGV = splice @_;
 
-    use Getopt::EX::Long qw(GetOptionsFromArray Configure ExConfigure);
+    use Getopt::EX::Long qw(GetOptions Configure ExConfigure);
     ExConfigure BASECLASS => [ __PACKAGE__, "Getopt::EX" ];
     Configure qw(bundling no_getopt_compat);
-    GetOptionsFromArray(\@_, $app->optspec) || pod2usage();
+    $app->getopt || pod2usage();
 
-    my $name = pop // pod2usage();
-    my @option = splice @_;
+    my $name = pop @ARGV // pod2usage();
+    my @option = splice @ARGV;
     my $pager = $app->pager || $ENV{'PAGER'} || 'less';
 
     my @found = do {

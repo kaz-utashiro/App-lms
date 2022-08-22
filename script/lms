@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use App::lms;
 
-exit App::lms->new->run(@ARGV);
+exit App::lms->new->run(splice @ARGV);
 
 =encoding utf-8
 
