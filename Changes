@@ -2,6 +2,10 @@ Revision history for "lms" command
 
 {{$NEXT}}
 
+0.08 2022-08-22T01:41:38Z
+
+    - New Getopt::EX::Hashed interface.
+
 0.07  2022-02-11 20:01:50 JST
 
     - Add github action badge.

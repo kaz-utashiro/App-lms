@@ -5,7 +5,7 @@ lms - Let Me See command
 
 # VERSION
 
-Version 0.05
+Version 0.08
 
 # SYNOPSIS
 
