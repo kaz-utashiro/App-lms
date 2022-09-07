@@ -5,7 +5,7 @@ lms - Let Me See command
 
 # VERSION
 
-Version 0.08
+Version 0.09
 
 # SYNOPSIS
 
@@ -20,6 +20,27 @@ script language.
 
 As for library files, only Perl is supported, and experimental support
 for Python is included.
+
+# OPTIONS
+
+- **-l**
+
+    Print module path.  Use multple times (`-ll`) to call `ls -l`.
+
+# MODULES
+
+- <App::lms::Command>
+
+    Module for executable file.
+
+- <App::lms::Perl>
+
+    Module for Perl module file.
+
+- <App::lms::Python>
+
+    Module for Python library file.  Use [Inline](https://metacpan.org/pod/Inline) module to execute
+    Phthon script within Perl module.
 
 # FILES
 

@@ -44,7 +44,7 @@
       "runtime" : {
          "requires" : {
             "Encode" : "0",
-            "Getopt::EX::Hashed" : "1.04",
+            "Getopt::EX::Hashed" : "1.05",
             "Getopt::EX::Long" : "0",
             "Inline" : "0",
             "List::Util" : "0",
@@ -70,7 +70,7 @@
          "web" : "https://github.com/kaz-utashiro/App-lms"
       }
    },
-   "version" : "0.08",
+   "version" : "0.09",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kazumasa Utashiro <kaz@utashiro.com>"

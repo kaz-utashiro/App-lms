@@ -1,6 +1,6 @@
 package App::lms;
 
-our $VERSION = "0.08";
+our $VERSION = "0.09";
 
 use v5.14;
 use warnings;
@@ -14,10 +14,9 @@ use List::Util qw(any first);
 use App::lms::Util;
 
 use Getopt::EX::Hashed; {
-    Getopt::EX::Hashed->configure(DEFAULT => [ is => 'lv' ]);
+    Getopt::EX::Hashed->configure(DEFAULT => [ is => 'rw' ]);
     has debug   => '       ' ;
-    has list    => ' l     ' ;
-    has verbose => ' v !   ' , default => 1 ;
+    has list    => ' l +   ' ;
     has pager   => ' p =s  ' ;
     has suffix  => '   =s  ' , default => [ qw( .pm ) ] ;
     has skip    => '   =s@ ' ,
@@ -53,11 +52,11 @@ sub run {
 	return 1;
     }
 
-    if ($app->list) {
-	if ($app->verbose) {
+    if (my $level = $app->list) {
+	if ($level > 1) {
 	    system 'ls', '-l', @found;
 	} else {
-	    print "@found\n";
+	    say for @found;
 	}
 	return 0;
     }

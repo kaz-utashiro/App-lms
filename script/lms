@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-our $VERSION = "0.08";
+our $VERSION = "0.09";
 use strict;
 use warnings;
 use App::lms;
@@ -14,7 +14,7 @@ lms - Let Me See command
 
 =head1 VERSION
 
-Version 0.08
+Version 0.09
 
 =head1 SYNOPSIS
 
@@ -29,6 +29,35 @@ script language.
 
 As for library files, only Perl is supported, and experimental support
 for Python is included.
+
+=head1 OPTIONS
+
+=over 7
+
+=item B<-l>
+
+Print module path.  Use multple times (C<-ll>) to call C<ls -l>.
+
+=back
+
+=head1 MODULES
+
+=over 7
+
+=item <App::lms::Command>
+
+Module for executable file.
+
+=item <App::lms::Perl>
+
+Module for Perl module file.
+
+=item <App::lms::Python>
+
+Module for Python library file.  Use L<Inline> module to execute
+Phthon script within Perl module.
+
+=back
 
 =head1 FILES
 
