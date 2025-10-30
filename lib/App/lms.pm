@@ -12,6 +12,7 @@ use open IO => 'utf8', ':std';
 use Pod::Usage;
 use List::Util qw(any first);
 use App::lms::Util;
+use Text::ParseWords qw(shellwords);
 
 use Getopt::EX::Hashed; {
     Getopt::EX::Hashed->configure(DEFAULT => [ is => 'rw' ]);
@@ -68,7 +69,7 @@ sub run {
 	}
     } @found or return 0;
 
-    exec $pager, @option, @found;
+    exec shellwords($pager), @option, @found;
     die "$pager: $!\n";
 }
 
