@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/kaz-utashiro/App-lms/workflows/test/badge.svg)](https://github.com/kaz-utashiro/App-lms/actions)
+[![Actions Status](https://github.com/kaz-utashiro/App-lms/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/kaz-utashiro/App-lms/actions?workflow=test)
 # NAME
 
 lms - Let Me See command
