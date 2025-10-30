@@ -20,6 +20,7 @@ use Getopt::EX::Hashed; {
     has list    => ' l +   ' ;
     has pager   => ' p =s  ' ;
     has suffix  => '   =s  ' , default => [ qw( .pm ) ] ;
+    has type    => ' t =s  ' , default => 'Command:Perl:Python' ;
     has skip    => '   =s@ ' ,
 	default => [ $ENV{OPTEX_BINDIR} || ".optex.d/bin" ] ;
 } no Getopt::EX::Hashed;
@@ -39,13 +40,18 @@ sub run {
     my $pager = $app->pager || $ENV{'PAGER'} || 'less';
 
     my @found = do {
-	no strict 'refs';
 	grep { defined }
 	map {
-	    eval "require $_" ? &{"$_\::get_path"}($app, $name) : ();
+	    no strict 'refs';
+	    if (eval "require $_") {
+		&{"$_\::get_path"}($app, $name);
+	    } else {
+		warn $@;
+		();
+	    }
 	}
 	map { __PACKAGE__ . '::' . $_ }
-	qw( Command Perl Python );
+	split /:+/, $app->type;
     };
 
     if (not @found) {
