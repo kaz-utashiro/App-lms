@@ -18,44 +18,108 @@ Version 0.09
 
 =head1 SYNOPSIS
 
-lms command/library
+    lms [options] command/library
+
+    # Look at a command file
+    lms perl
+
+    # Look at a Perl module
+    lms Getopt::Long
+
+    # Look at a Python library
+    lms os.path
+
+    # Show file path only
+    lms -l Getopt::Long
+
+    # Show detailed file information
+    lms -ll Getopt::Long
 
 =head1 DESCRIPTION
 
-This is a small program to look a command or library file.
+B<lms> (Let Me See) is a utility to locate and display command or library files.
 
 It is convenient to see a command file written in shell or any other
 script language.
 
-As for library files, only Perl is supported, and experimental support
-for Python is included.
+For library files, Perl modules are fully supported, and experimental support
+for Python libraries is included.
+
+The program searches through different file types in order (command, Perl, Python by default)
+and displays the first match found using a pager.
 
 =head1 OPTIONS
 
 =over 7
 
-=item B<-l>
+=item B<-l>, B<--list>
 
-Print module path.  Use multple times (C<-ll>) to call C<ls -l>.
+Print module path instead of displaying the file contents.
+Use multiple times (C<-ll>) to call C<ls -l> for detailed file information.
+
+=item B<-v>, B<--version>
+
+Display version information and exit.
+
+=item B<-p>, B<--pager> I<command>
+
+Specify the pager command to use for displaying files.
+Defaults to the C<$PAGER> environment variable, or C<less> if not set.
+
+=item B<-t>, B<--type> I<handler[:handler:...]>
+
+Specify which file type handlers to use and in what order.
+Handlers are specified as colon-separated names.
+
+Default: C<Command:Perl:Python>
+
+Available handlers:
+- C<Command>: Search for executable commands in C<$PATH>
+- C<Perl>: Search for Perl modules in C<@INC>
+- C<Python>: Search for Python libraries using Python's inspect module
+
+Examples:
+    lms --type Perl Getopt::Long       # Only search Perl modules
+    lms --type Python:Perl os.path     # Search Python first, then Perl
+
+=item B<--suffix> I<extension>
+
+Specify file suffix/extension to search for (mainly for Perl modules).
+
+Default: C<.pm>
+
+=item B<--skip> I<pattern>
+
+Specify directory patterns to skip during search.
+Can be used multiple times to specify multiple patterns.
+
+Default: C<.optex.d/bin> (or C<$OPTEX_BINDIR> if set)
 
 =back
 
-=head1 MODULES
+=head1 HANDLER MODULES
+
+The program uses a plugin architecture where different file type handlers
+are dynamically loaded based on the C<--type> option. Each handler must
+implement a C<get_path($app, $name)> method.
 
 =over 7
 
-=item <App::lms::Command>
+=item B<App::lms::Command>
 
-Module for executable file.
+Handler for executable commands. Searches through C<$PATH> environment
+variable to find executable files.
 
-=item <App::lms::Perl>
+=item B<App::lms::Perl>
 
-Module for Perl module file.
+Handler for Perl modules. Searches through C<@INC> paths to find
+Perl module files (.pm and .pl files).
 
-=item <App::lms::Python>
+=item B<App::lms::Python>
 
-Module for Python library file.  Use L<Inline> module to execute
-Phthon script within Perl module.
+Handler for Python libraries. Uses L<Inline::Python> module to execute
+Python's C<inspect.getsourcefile()> function to locate Python module files.
+This is experimental functionality.
 
 =back
 
@@ -65,14 +129,72 @@ Phthon script within Perl module.
 
 =item F<~/.Inline>
 
-Directory used by L<Inline> module.  Automatically created if not
-exists.
+Directory used by the L<Inline::Python> module for caching compiled Python bindings.
+Automatically created on first use when accessing Python libraries.
 
 =back
 
-=head1 INSTALL
+=head1 EXAMPLES
 
-cpanm https://github.com/kaz-utashiro/App-lms.git
+    # Display a shell command file
+    lms bash
+
+    # Display a Perl module
+    lms List::Util
+
+    # Display a Python library
+    lms os.path
+
+    # Just show the file path
+    lms -l perl
+
+    # Show detailed file information
+    lms -ll Getopt::EX::Long
+
+    # Only search for Perl modules
+    lms --type Perl Data::Dumper
+
+    # Search Python first, then fall back to Perl
+    lms --type Python:Perl sys
+
+    # Use a custom pager
+    lms --pager "vim -R" Moose
+
+    # Pass options to the pager (use -- to separate)
+    lms -- +10 List::Util  # Open less at line 10
+
+=head1 INSTALLATION
+
+    # From CPAN
+    cpanm App::lms
+
+    # From GitHub
+    cpanm https://github.com/kaz-utashiro/App-lms.git
+
+    # From source
+    git clone https://github.com/kaz-utashiro/App-lms.git
+    cd App-lms
+    cpanm --installdeps .
+    cpanm .
+
+=head1 ENVIRONMENT
+
+=over 7
+
+=item B<PAGER>
+
+Default pager command to use when displaying files.
+If not set, C<less> is used.
+
+=item B<OPTEX_BINDIR>
+
+If set, overrides the default skip pattern for the C<--skip> option.
+
+=back
+
+=head1 SEE ALSO
+
+L<App::lms>, L<Getopt::EX>, L<Getopt::EX::Hashed>, L<Inline::Python>
 
 =head1 AUTHOR
 
