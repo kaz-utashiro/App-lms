@@ -71,7 +71,7 @@
          "web" : "https://github.com/kaz-utashiro/App-lms"
       }
    },
-   "version" : "0.09",
+   "version" : "0.10",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kazumasa Utashiro <kaz@utashiro.com>"
