@@ -18,6 +18,7 @@ use Getopt::EX::Hashed; {
     Getopt::EX::Hashed->configure(DEFAULT => [ is => 'rw' ]);
     has debug   => '       ' ;
     has list    => ' l +   ' ;
+    has version => ' v     ' , action => sub { say "Version: $VERSION"; exit } ;
     has pager   => ' p =s  ' ;
     has suffix  => '   =s  ' , default => [ qw( .pm ) ] ;
     has type    => ' t =s  ' , default => 'Command:Perl:Python' ;
