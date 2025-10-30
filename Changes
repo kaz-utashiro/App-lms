@@ -2,6 +2,13 @@ Revision history for "lms" command
 
 {{$NEXT}}
 
+    - Add --version/-v option to display version information.
+    - Add --type/-t option to customize handler module selection.
+    - Fix PAGER handling to support arguments in pager commands.
+    - Improve Inline::Python configuration for Python library support.
+    - Update comprehensive documentation with detailed option descriptions and examples.
+    - Add CLAUDE.md for Claude Code integration.
+
 0.09 2022-09-07T09:44:11Z
 
     - Update -l option behavior.
