@@ -1,4 +1,5 @@
 package App::lms::Python;
+
 use v5.14;
 use warnings;
 
@@ -16,9 +17,8 @@ BEGIN {
     }
 }
 
-use Inline
-    DIRECTORY => $DIR,
-    Python => <<'END';
+use Inline Config => directory => $DIR;
+use Inline Python => <<'END';
 
 import re
 import inspect
@@ -31,6 +31,16 @@ def getsourcefile(name):
     except:
         return
     return inspect.getsourcefile(eval(name))
+
+import os
+import sys
+
+def find_module_file(module_name):
+    for path in sys.path:
+        file_path = os.path.join(path, module_name.replace('.', os.sep) + ".py")
+        if os.path.isfile(file_path):
+            return file_path
+    return None
 
 END
 
